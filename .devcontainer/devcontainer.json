@@ -1,0 +1,40 @@
+{
+  "name": "${localWorkspaceFolderBasename}",
+
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+
+  "runArgs": [
+    "--name",
+    "${localWorkspaceFolderBasename}"
+  ],
+
+  "shutdownAction": "stopContainer",
+
+  "remoteUser": "dev",
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/code/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/home/dev/code/${localWorkspaceFolderBasename}",
+
+  "mounts": [
+	"source=${localEnv:SSH_AUTH_SOCK},target=/tmp/ssh-agent.sock,type=bind",
+	"source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,readonly"
+  ],
+
+  "containerEnv": {
+    "SSH_AUTH_SOCK": "/tmp/ssh-agent.sock",
+    "DISPLAY": "${localEnv:DISPLAY}"
+  },
+
+  "init": true,
+
+  "postCreateCommand": "tldr --update || true",
+
+  "customizations": {
+    "zed": {
+      "extensions": []
+    }
+  }
+}
